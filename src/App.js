@@ -11,6 +11,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
+
 
   useEffect(() => {
     blogService.getAll().then(blogs => setBlogs(blogs)
@@ -24,15 +27,33 @@ const App = () => {
     }
   }, [])
 
+  const showErrorMessage = message => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+  }
+
+  const showSuccessMessage = message => {
+    setSuccessMessage(message)
+    setTimeout(() => {
+      setSuccessMessage(null)
+    }, 5000)
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
     
-    const user = await loginService.login({ username, password })
-    blogService.setToken(user.token)
-    window.localStorage.setItem('loggedUser', JSON.stringify(user))
-    setUser(user)
-    setUsername('')
-    setPassword('')
+    try {
+      const user = await loginService.login({ username, password })
+      blogService.setToken(user.token)
+      window.localStorage.setItem('loggedUser', JSON.stringify(user))
+      setUser(user)
+      setUsername('')
+      setPassword('')
+    } catch (exception) {
+      showErrorMessage('wrong username or password')
+    }
   }
 
   const handleLogout = async (event) => {
@@ -66,28 +87,25 @@ const App = () => {
 
     blogService.setToken(user.token)
 
-    const returnedBlog = await blogService.create(blogObject)
-    setBlogs(blogs.concat(returnedBlog))
-    setNewTitle('')
-    setNewAuthor('')
-    setNewUrl('')
-
-    /*
-    blogService
-      .create(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-        setNewTitle('')
-        setNewAuthor('')
-        setNewUrl('')
-      })
-    */
+    try {
+      const returnedBlog = await blogService.create(blogObject)
+      setBlogs(blogs.concat(returnedBlog))
+      setNewTitle('')
+      setNewAuthor('')
+      setNewUrl('')
+      showSuccessMessage(`a new blog ${newTitle} by ${newAuthor} added`)
+    } catch (exception) {
+      showErrorMessage('failed to add blog')
+      console.log(exception)
+    }
   }
 
   if (user === null) {
     return (
       <div>
         <h2>log in to application</h2>
+        <Notification message={errorMessage} messageStyle="error" />
+        <Notification message={successMessage} messageStyle="success" />
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -116,6 +134,8 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification message={errorMessage} messageStyle="error" />
+      <Notification message={successMessage} messageStyle="success" />
       <p>
         {user.name} logged in
         <button onClick={handleLogout}>logout</button>
@@ -146,6 +166,18 @@ const App = () => {
         <button type="submit">create</button>
       </form>
       {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
+    </div>
+  )
+}
+
+const Notification = ({message, messageStyle}) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className={messageStyle}>
+      {message}
     </div>
   )
 }
