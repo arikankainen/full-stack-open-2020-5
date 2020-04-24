@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import Blog from './components/Blog'
 import Togglable from './components/Togglable'
+import Notification from './components/Notification'
+import BlogList from './components/BlogList'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
@@ -112,20 +113,7 @@ const App = () => {
       </p>
 
       {blogForm()}
-
-      {blogs.map(blog => <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />)}
-    </div>
-  )
-}
-
-const Notification = ({message, messageStyle}) => {
-  if (message === null) {
-    return null
-  }
-
-  return (
-    <div className={messageStyle}>
-      {message}
+      <BlogList blogs={blogs} updateBlog={updateBlog} />
     </div>
   )
 }
