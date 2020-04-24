@@ -73,13 +73,33 @@ const App = () => {
   const updateBlog = async (blogObject) => {
     blogService.setToken(user.token)
 
+    const updatedBlog = {
+      ...blogObject,
+      user: blogObject.user.id,
+    }
+
     try {
-      const returnedBlog = await blogService.update(blogObject)
-      setBlogs(blogs.map(blog => blog.id !== returnedBlog.id ? blog : returnedBlog))
+      const returnedBlog = await blogService.update(updatedBlog)
+      setBlogs(blogs.map(blog => blog.id !== returnedBlog.id ? blog : blogObject))
       
       showSuccessMessage(`blog ${blogObject.title} by ${blogObject.author} updated`)
     } catch (exception) {
       showErrorMessage('failed to update blog')
+    }
+  }
+
+  const removeBlog = async (blogObject) => { // TODO
+    const id = blogObject.id
+
+    blogService.setToken(user.token)
+
+    try {
+      await blogService.remove(blogObject)
+      setBlogs(blogs.filter(blog => blog.id !== id))
+      
+      showSuccessMessage(`blog ${blogObject.title} by ${blogObject.author} removed`)
+    } catch (exception) {
+      showErrorMessage('failed to remove blog')
     }
   }
 
@@ -113,7 +133,7 @@ const App = () => {
       </p>
 
       {blogForm()}
-      <BlogList blogs={blogs} updateBlog={updateBlog} />
+      <BlogList blogs={blogs} updateBlog={updateBlog} removeBlog={removeBlog} loggedUser={user} />
     </div>
   )
 }

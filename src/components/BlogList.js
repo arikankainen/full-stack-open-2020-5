@@ -1,7 +1,7 @@
 import React from 'react'
 import Blog from './Blog'
 
-const BlogList = ({ blogs, updateBlog }) => {
+const BlogList = ({ blogs, updateBlog, removeBlog, loggedUser }) => {
   const compareLikes = (a, b) => {
     const likesA = a.likes
     const likesB = b.likes
@@ -17,7 +17,15 @@ const BlogList = ({ blogs, updateBlog }) => {
 
   return (
     <div>
-      {sortedBlogs.map(blog => <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />)}
+      {sortedBlogs.map(blog =>
+        <Blog
+          key={blog.id}
+          blog={blog}
+          updateBlog={updateBlog}
+          removeBlog={removeBlog}
+          loggedUser={loggedUser}
+        />
+      )}
     </div>
   )
 }
