@@ -81,3 +81,26 @@ test('Renders also url and likes when view-button clicked', () => {
   expect(url).toContainHTML('blog-url')
   expect(likes).toContainHTML('blog-likes')
 })
+
+test('Clicking like-button twice also calls event handler twice', () => {
+  const updateBlog = jest.fn()
+  const removeBlog = jest.fn()
+
+  const component = render(
+    <Blog
+      blog={blog}
+      updateBlog={updateBlog}
+      removeBlog={removeBlog}
+      loggedUser={loggedUser}
+    />
+  )
+
+  const buttonView = component.container.querySelector('.blog-view')
+  fireEvent.click(buttonView)
+
+  const buttonLike = component.container.querySelector('.blog-like')
+  fireEvent.click(buttonLike)
+  fireEvent.click(buttonLike)
+
+  expect(updateBlog.mock.calls).toHaveLength(2)
+})
