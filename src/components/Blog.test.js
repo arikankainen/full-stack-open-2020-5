@@ -1,6 +1,6 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
 
 const blog = {
@@ -31,7 +31,7 @@ const loggedUser = {
   ],
 }
 
-test('renders title and author, but not url and likes', () => {
+test('Renders title and author, but not url and likes', () => {
   const updateBlog = jest.fn()
   const removeBlog = jest.fn()
 
@@ -49,8 +49,35 @@ test('renders title and author, but not url and likes', () => {
   const url = component.container.querySelector('.blog-url')
   const likes = component.container.querySelector('.blog-likes')
 
-  expect(title).not.toBeNull()
-  expect(author).not.toBeNull()
+  expect(title).toContainHTML('blog-title')
+  expect(author).toContainHTML('blog-author')
   expect(url).toBeNull()
   expect(likes).toBeNull()
+})
+
+test('Renders also url and likes when view-button clicked', () => {
+  const updateBlog = jest.fn()
+  const removeBlog = jest.fn()
+
+  const component = render(
+    <Blog
+      blog={blog}
+      updateBlog={updateBlog}
+      removeBlog={removeBlog}
+      loggedUser={loggedUser}
+    />
+  )
+
+  const buttonView = component.container.querySelector('.blog-view')
+  fireEvent.click(buttonView)
+
+  const title = component.container.querySelector('.blog-title')
+  const author = component.container.querySelector('.blog-author')
+  const url = component.container.querySelector('.blog-url')
+  const likes = component.container.querySelector('.blog-likes')
+
+  expect(title).toContainHTML('blog-title')
+  expect(author).toContainHTML('blog-author')
+  expect(url).toContainHTML('blog-url')
+  expect(likes).toContainHTML('blog-likes')
 })

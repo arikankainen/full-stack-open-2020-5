@@ -34,7 +34,7 @@ const Blog = ({ blog, updateBlog, removeBlog, loggedUser }) => {
       <div style={blogStyle}>
 
         <div className="blog-title">
-          {blog.title} <button onClick={() => setShowAll(!showAll)}>hide</button>
+          {blog.title} <button className="blog-hide" onClick={() => setShowAll(!showAll)}>hide</button>
         </div>
 
         <div className="blog-url">
@@ -56,7 +56,7 @@ const Blog = ({ blog, updateBlog, removeBlog, loggedUser }) => {
 
   return (
     <div style={blogStyle}>
-      <span className="blog-title">{blog.title}</span> <span className="blog-author">{blog.author}</span> <button onClick={() => setShowAll(!showAll)}>view</button>
+      <span className="blog-title">{blog.title}</span> <span className="blog-author">{blog.author}</span> <button className="blog-view" onClick={() => setShowAll(!showAll)}>view</button>
     </div>
   )
 }
