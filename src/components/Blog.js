@@ -32,10 +32,23 @@ const Blog = ({ blog, updateBlog, removeBlog, loggedUser }) => {
   if (showAll) {
     return (
       <div style={blogStyle}>
-        {blog.title} <button onClick={() => setShowAll(!showAll)}>hide</button><br/>
-        {blog.url}<br/>
-        likes {blog.likes} <button onClick={handleLike}>like</button><br/>
-        {blog.author}<br />
+
+        <div className="blog-title">
+          {blog.title} <button onClick={() => setShowAll(!showAll)}>hide</button>
+        </div>
+
+        <div className="blog-url">
+          {blog.url}
+        </div>
+
+        <div className="blog-likes">
+          likes {blog.likes} <button onClick={handleLike}>like</button>
+        </div>
+
+        <div className="blog-author">
+          {blog.author}
+        </div>
+
         {loggedUsername === blogUsername && <button onClick={handleDelete}>remove</button>}
       </div>
     )
@@ -43,7 +56,7 @@ const Blog = ({ blog, updateBlog, removeBlog, loggedUser }) => {
 
   return (
     <div style={blogStyle}>
-      {blog.title} {blog.author} <button onClick={() => setShowAll(!showAll)}>view</button>
+      <span className="blog-title">{blog.title}</span> <span className="blog-author">{blog.author}</span> <button onClick={() => setShowAll(!showAll)}>view</button>
     </div>
   )
 }
