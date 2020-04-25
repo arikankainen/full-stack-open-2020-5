@@ -14,8 +14,10 @@ const App = () => {
   const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs => setBlogs(blogs)
-  )}, [])
+    blogService
+      .getAll()
+      .then(blogs => setBlogs(blogs))
+  }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -50,7 +52,7 @@ const App = () => {
     }
   }
 
-  const handleLogout = async (event) => {
+  const handleLogout = async () => {
     blogService.setToken(null)
     window.localStorage.removeItem('loggedUser')
     setUser(null)
@@ -81,7 +83,7 @@ const App = () => {
     try {
       const returnedBlog = await blogService.update(updatedBlog)
       setBlogs(blogs.map(blog => blog.id !== returnedBlog.id ? blog : blogObject))
-      
+
       showSuccessMessage(`blog ${blogObject.title} by ${blogObject.author} updated`)
     } catch (exception) {
       showErrorMessage('failed to update blog')
@@ -96,7 +98,7 @@ const App = () => {
     try {
       await blogService.remove(blogObject)
       setBlogs(blogs.filter(blog => blog.id !== id))
-      
+
       showSuccessMessage(`blog ${blogObject.title} by ${blogObject.author} removed`)
     } catch (exception) {
       showErrorMessage('failed to remove blog')
