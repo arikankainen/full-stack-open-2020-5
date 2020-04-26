@@ -1,11 +1,17 @@
 describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3001/api/testing/reset')
-    const user = {
+    const admin = {
       name: 'Administrator',
       username: 'admin',
       password: '123456'
     }
+    const user = {
+      name: 'Normal user',
+      username: 'user',
+      password: '123456'
+    }
+    cy.request('POST', 'http://localhost:3001/api/users/', admin)
     cy.request('POST', 'http://localhost:3001/api/users/', user)
     cy.visit('http://localhost:3000')
   })
@@ -34,7 +40,7 @@ describe('Blog app', function() {
     })
   })
 
-  describe('When logged in', function() {
+  describe('When logged in as "admin"', function() {
     beforeEach(function() {
       cy.login({ username: 'admin', password: '123456' })
     })
@@ -63,6 +69,20 @@ describe('Blog app', function() {
         cy.get('.blog-like').click()
         cy.get('.blog-likes').contains('likes 1')
       })
+
+      it('it can be deleted by the user who created it', function() {
+        cy.get('.blog-view').click()
+        cy.get('.blog-delete').click()
+        cy.get('.blog-title').should('not.exist')
+      })
+
+      it('it cannot be deleted by another user', function() {
+        cy.login({ username: 'user', password: '123456' })
+        cy.get('.blog-view').click()
+        cy.get('.blog-delete').should('not.exist')
+      })
     })
   })
+
+  
 })

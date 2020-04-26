@@ -49,7 +49,7 @@ const Blog = ({ blog, updateBlog, removeBlog, loggedUser }) => {
           {blog.author}
         </div>
 
-        {loggedUsername === blogUsername && <button onClick={handleDelete}>remove</button>}
+        {loggedUsername === blogUsername && <button className="blog-delete" onClick={handleDelete}>remove</button>}
       </div>
     )
   }
