@@ -58,9 +58,9 @@ describe('Blog app', function() {
       cy.get('.blog-author').contains('TestAuthor')
     })
 
-    describe.only('When one blog already created', function() {
+    describe('When one blog already created', function() {
       beforeEach(function () {
-        cy.createBlog({ title: 'TestTitle', author: 'TestAuthor', url: 'TestUrl' })
+        cy.createBlog({ title: 'TestTitle', author: 'TestAuthor', url: 'TestUrl', likes: 0 })
       })
 
       it('it can be liked', function() {
@@ -82,7 +82,30 @@ describe('Blog app', function() {
         cy.get('.blog-delete').should('not.exist')
       })
     })
-  })
 
-  
+    describe('When several blogs already created', function() {
+      beforeEach(function () {
+        cy.createBlog({ title: 'TestTitle1', author: 'TestAuthor1', url: 'TestUrl1', likes: 3 })
+        cy.createBlog({ title: 'TestTitle2', author: 'TestAuthor2', url: 'TestUrl2', likes: 15 })
+        cy.createBlog({ title: 'TestTitle3', author: 'TestAuthor3', url: 'TestUrl3', likes: 201 })
+        cy.createBlog({ title: 'TestTitle4', author: 'TestAuthor4', url: 'TestUrl4', likes: 7 })
+        cy.createBlog({ title: 'TestTitle5', author: 'TestAuthor5', url: 'TestUrl5', likes: 32 })
+        cy.createBlog({ title: 'TestTitle6', author: 'TestAuthor6', url: 'TestUrl6', likes: 401 })
+        cy.createBlog({ title: 'TestTitle7', author: 'TestAuthor7', url: 'TestUrl7', likes: 23 })
+        cy.createBlog({ title: 'TestTitle8', author: 'TestAuthor8', url: 'TestUrl8', likes: 1 })
+        cy.createBlog({ title: 'TestTitle9', author: 'TestAuthor9', url: 'TestUrl9', likes: 55 })
+      })
+
+      it('they are sorted descending order by likes', function() {
+        cy.get('.blog-view').click({ multiple: true })
+
+        cy.get('.blog-likes-number')
+          .then(elements => {
+            const likeList = [...elements].map(element => Number(element.textContent))
+            const result = !!likeList.reduce((prev, cur) => prev !== false && cur <= prev && cur)
+            cy.wrap(result).should('to.be.true')
+          })
+      })
+    })
+  })
 })

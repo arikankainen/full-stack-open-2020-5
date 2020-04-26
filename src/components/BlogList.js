@@ -13,7 +13,7 @@ const BlogList = ({ blogs, updateBlog, removeBlog, loggedUser }) => {
 
     return comparison
   }
-  
+
   const sortedBlogs = [...blogs].sort(compareLikes)
 
   return (
