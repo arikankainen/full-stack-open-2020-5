@@ -57,7 +57,10 @@ const BlogForm = ({ createBlog }) => {
             onChange={handleInputChange}
           />
         </p>
-        <button type="submit">create</button>
+        <button
+          id="blog-create"
+          type="submit"
+        >create</button>
       </form>
     </div>
   )
